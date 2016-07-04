@@ -6,10 +6,15 @@ describe GrapeLogFormatter::Basic do
 
   let(:result) { GrapeLogFormatter::Basic.new.call(severity, time, nil, data) }
   let(:pid) { $PROCESS_ID }
+  let(:uniq_id) { "a345dv" }
   let(:exception) do
     e = StandardError.new("Application failed")
     e.set_backtrace(%w(file_1 file_2))
     e
+  end
+
+  before do
+    allow(SecureRandom).to receive(:hex) { uniq_id }
   end
 
   context "data is a string" do
@@ -17,7 +22,7 @@ describe GrapeLogFormatter::Basic do
 
     it "contain time, severity and data string" do
       expect(result).to eq <<-STR
-[2016-05-06 18:20:00 +0200] INFO -- Warning message
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- Warning message
 
 STR
     end
@@ -28,7 +33,7 @@ STR
 
     it "contain time, severity and exception title and backtrace" do
       expect(result).to eq <<-STR
-[2016-05-06 18:20:00 +0200] INFO -- Application failed
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- Application failed
 \tfile_1
 \tfile_2
 
@@ -52,9 +57,9 @@ STR
 
       it "contain time, severity, method, status, path, params, pid, ip and time" do
         expect(result).to eq <<-STR
-[2016-05-06 18:20:00 +0200] INFO -- POST 200  /api/v1/locks
-Params: {"content_id":"150d33f4-d9a7-4e21-b425-067c638d1ffe"}
-PID: #{pid} | IP: 127.0.0.1 | Total: 18.18 DB: 0.0 View: 18.18
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- POST 200  /api/v1/locks
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- Params: {"content_id":"150d33f4-d9a7-4e21-b425-067c638d1ffe"}
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- IP: 127.0.0.1 | Total: 18.18 DB: 0.0 View: 18.18
 
         STR
       end
@@ -71,9 +76,9 @@ PID: #{pid} | IP: 127.0.0.1 | Total: 18.18 DB: 0.0 View: 18.18
 
       it "contain time, severity, pid, exception title, backtrace" do
         expect(result).to eq <<-STR
-[2016-05-06 18:20:00 +0200] INFO -- rescued_exception
-PID: #{pid} | IP: - | Total: - DB: - View: -
-Application failed
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- rescued_exception
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- IP: - | Total: - DB: - View: -
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- Application failed
 \tfile_1
 \tfile_2
 
@@ -99,10 +104,10 @@ Application failed
 
       it "contain time, severity, pid, exception title, backtrace" do
         expect(result).to eq <<-STR
-[2016-05-06 18:20:00 +0200] INFO -- rescued_exception /api/v1/locks/cce8e905
-Params: {"id":"cce8e905"}
-PID: #{pid} | IP: 127.0.0.1 | Total: - DB: - View: -
-Application failed
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- rescued_exception /api/v1/locks/cce8e905
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- Params: {"id":"cce8e905"}
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- IP: 127.0.0.1 | Total: - DB: - View: -
+[2016-05-06 18:20:00 +0200] <a345dv:##{pid}> INFO -- Application failed
 \tfile_1
 \tfile_2
 
