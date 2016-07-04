@@ -5,9 +5,10 @@ Provide log formatter for Grape API. Logged data now contains PID, Time, Path, P
 
 ## Example
 ```bash
-[2016-07-01 15:31:42 +0200] INFO -- POST 200  /api/v1/publish_product_review
-Params: {"lead_content_id":"4266a24e-ec1e-4818-9c09-ceb269c693a3","content_type":"product_reviews"}
-PID: 30896 | IP: 127.0.0.1 | Total: 4.28 DB: 0.0 View: 4.28
+#                            Request ID, PID
+[2016-07-04 09:37:42 +0100] <289cd741fe:#6760> INFO -- POST 200  /api/v1/locks
+[2016-07-04 09:37:42 +0100] <289cd741fe:#6760> INFO -- Params: {"content_id":"68e69712-2681-481d-8b36-904a99bb6ee1"}
+[2016-07-04 09:37:42 +0100] <289cd741fe:#6760> INFO -- IP: 127.0.0.1 | Total: 108.18 DB: 0.0 View: 108.18
 ```
 
 ## Installation
